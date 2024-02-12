@@ -19,6 +19,10 @@ Vue.component('product', {
     premium: {
       type: Boolean,
       required: true
+    },
+    cart: {
+      type: [],
+      required: true
     }
   },
   template: `
@@ -59,14 +63,12 @@ Vue.component('product', {
               Add to Cart
       </button>
       <button @click="removeFromCart" 
-              :disabled="cart <= 0"
-              :class="{ disabledButton: cart <= 0 }">
+              :disabled="cart.length <= 0"
+              :class="{ disabledButton: cart.length <= 0 }">
               Remove from cart
       </button>
 
-      <div class="cart">
-        <p>Cart({{ cart }})</p>
-      </div>
+      
 
     </div>
   </div>
@@ -86,28 +88,27 @@ Vue.component('product', {
           variantId: 2234,
           variantColor: 'green',
           variantImage: './assets/vmSocks-green.jpg',
-          varianQuantity: 10
+          variantQuantity: 10
         },
         {
           variantId: 2235,
           variantColor: 'blue',
           variantImage: './assets/vmSocks-blue.jpg',
-          varianQuantity: 0
+          variantQuantity: 0
         }
       ],
-      sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
-      cart: 0
+      sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
     }
   },
   methods: {
     addToCart: function() {
-      this.cart += 1
+      this.$emit('add-to-cart',this.variants[this.selectedVariant].variantId)
     },
     updateProduct(index) {
       this.selectedVariant = index
     },
     removeFromCart() {
-      this.cart -= 1
+      this.$emit('remove-from-cart',this.variants[this.selectedVariant].variantId)
     }
   },
   computed: {
@@ -118,7 +119,7 @@ Vue.component('product', {
       return this.variants[this.selectedVariant].variantImage
     },
     inStock() {
-      return this.variants[this.selectedVariant].varianQuantity
+      return this.variants[this.selectedVariant].variantQuantity
     },
     sale() {
       if(this.onSale)
@@ -144,7 +145,20 @@ Vue.component('product', {
 var app = new Vue({
   el: '#app',
   data: {
-    premium: false
+    premium: false,
+    cart: []
+  },
+  methods: {
+    updateCart(id) {
+      this.cart.push(id)
+    },
+    removeItem(id) {
+      for(var i = this.cart.length - 1; i >= 0; i--) {
+        if (this.cart[i] === id) {
+          this.cart.splice(i, 1);
+        }
+      }
+    }
   }
 })
   
