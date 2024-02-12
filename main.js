@@ -6,21 +6,35 @@ var app = new Vue({
     product: 'Socks',
     image: './assets/vmSocks-green.jpg',
     link: 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks',
-    inStock: true,
+    inStock: false,
     onSale: true,
     details: ['80% cotton', '20% polyester', 'Gender-neutral'],
     variants: [
       {
         variantId: 2234,
-        variantColor: 'green'    
+        variantColor: 'green',
+        variantImage: './assets/vmSocks-green.jpg'
       },
       {
         variantId: 2235,
-        variantColor: 'blue'
+        variantColor: 'blue',
+        variantImage: './assets/vmSocks-blue.jpg'
       }
     ],
-    sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
-  } 
+    sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+    cart: 0
+  },
+  methods: {
+    addToCart: function() {
+      this.cart += 1
+    },
+    updateProduct(variantImage) {
+      this.image = variantImage
+    },
+    removeFromCart() {
+      this.cart -= 1
+    }
+  }
 })
   
   
