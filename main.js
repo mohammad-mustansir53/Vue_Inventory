@@ -41,9 +41,8 @@ Vue.component('product', {
       <!-- <br /> -->
       <p>{{ sale }}</p>
       <a :href="link" target="_blank">More products like this</a>
-      <p>Shipping: {{ shipping }}</p>
 
-      <product-details :details="details"></product-details>
+      <info-tabs :shipping="shipping" :details="details"></info-tabs>
 
       <div v-for="(variant,index) in variants" 
         :key="variant.variantId"
@@ -259,9 +258,6 @@ Vue.component('product-tabs',{
       </div>
 
       <product-review v-show="selectedTab === 'Make a Review'"></product-review>
-
-
-
     </div>
     
   `,
@@ -269,6 +265,44 @@ Vue.component('product-tabs',{
     return {
       tabs: ['Reviews', 'Make a Review'],
       selectedTab: 'Reviews'
+    }
+  }
+})
+
+Vue.component('info-tabs', {
+  props: {
+    shipping: {
+      required: true
+    },
+    details: {
+      type: Array,
+      required: true
+    }
+  },
+  template: `
+    <div>
+      <span class="tabs" 
+      :class="{ activeTab: selectedTab === tab }"
+      v-for="(tab, index) in tabs" :key="index"
+      @click="selectedTab = tab">
+      {{ tab }}</span>
+
+      <div v-show="selectedTab === 'Shipping'">
+        <p>Shipping: {{ shipping }}</p>
+      </div>
+
+      <div v-show="selectedTab === 'Details'">
+        <ul>
+          <li v-for="detail in details">{{ detail }}</li>
+        </ul>
+      </div>
+  
+    </div>
+  `,
+  data() {
+    return {
+      tabs: ['Shipping', 'Details'],
+      selectedTab: 'Shipping'
     }
   }
 })
